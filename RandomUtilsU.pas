@@ -28,7 +28,7 @@ unit RandomUtilsU;
 interface
 
 const
-  FirstNames: array [0 .. 9] of string = (
+  FirstNames: array [0 .. 29] of string = (
     'Daniele',
     'Debora',
     'Mattia',
@@ -38,14 +38,38 @@ const
     'Joseph',
     'David',
     'Charles',
-    'Thomas'
+    'Thomas',
+    'Ethan',
+    'Liam',
+    'Noah',
+    'Logan',
+    'Lucas',
+    'Mason',
+    'Benjamin',
+    'Alexander',
+    'Elijah',
+    'Jordan',
+    'Alexander',
+    'Jamie',
+    'Tyler',
+    'Caleb',
+    'Kieran',
+    'Ryan',
+    'Colton',
+    'Jaxon',
+    'Gavin',
+    'Ryder'
     );
 
-  LastNames: array [0 .. 9] of string = (
+  LastNames: array [0 .. 13] of string = (
     'Smith',
     'Johnson',
     'Williams',
     'Brown',
+    'Black',
+    'Red',
+    'Green',
+    'Willis',
     'Jones',
     'Miller',
     'Davis',
@@ -54,52 +78,64 @@ const
     'Anderson'
     );
 
-  Countries: array [0 .. 12] of string = (
-    'Italy',
-    'New York',
-    'Illinois',
-    'Arizona',
-    'Nevada',
-    'UK',
-    'France',
-    'Georgia',
-    'Spain',
-    'Portugal',
-    'Germany',
-    'Norway',
-    'California'
-    );
+  Countries: array [0 .. 24] of string = (
+    'italy',
+    'new york',
+    'illinois',
+    'arizona',
+    'nevada',
+    'uk',
+    'france',
+    'georgia',
+    'spain',
+    'portugal',
+    'germany',
+    'norway',
+    'california',
+    'usa',
+    'japan',
+    'australia',
+    'singapore',
+    'hong kong',
+    'taiwan',
+    'south africa',
+    'canada',
+    'switzerland',
+    'sweden',
+    'netherlands',
+    'belgium'
+  );
 
 function GetRndFirstName: String;
 function GetRndLastName: String;
 function GetRndFullName: String;
 function GetRndCountry: String;
-function GetRndDate: TDate;
+function GetRndDate(const InitialYear: Word = 1980; YearsSpan: Word = 40): TDate;
+function GetRndInteger(const aFrom: Integer = 0; aTo: Integer = 1000): Integer;
 
 implementation
 
 
 uses
-  System.SysUtils, System.DateUtils;
+  System.SysUtils, System.DateUtils, System.Math;
 
 const
   OneDay = OneHour * 24;
 
-function GetRndDate: TDate;
+function GetRndDate(const InitialYear: Word; YearsSpan: Word): TDate;
 begin
-  Result := EncodeDate(1980 + Random(40),1,1) + (OneDay * Random(365));
+  Result := EncodeDate(InitialYear + Random(YearsSpan),1,1) + (OneDay * Random(365));
 end;
 
 function GetRndCountry: String;
 begin
-  Result := Countries[Random(Length(Countries))];
+  Result := Countries[Random(High(Countries)+1)];
 end;
 
 function GetRndFirstName: String;
 begin
-  Result := FirstNames[Random(Length(FirstNames))];
+  Result := FirstNames[Random(High(FirstNames)+1)];
 end;
-
 
 function GetRndFullName: String;
 begin
@@ -108,7 +144,21 @@ end;
 
 function GetRndLastName: String;
 begin
-  Result := LastNames[Random(Length(LastNames))];
+  Result := LastNames[Random(High(LastNames)+1)];
 end;
 
+function GetRndInteger(const aFrom: Integer; aTo: Integer): Integer;
+begin
+  if aFrom >= aTo then
+  begin
+    raise Exception.Create('FROM cannot be greater nor equal to TO');
+  end;
+  Result := RandomRange(aFrom, aTo);
+end;
+
+initialization
+
+Randomize;
+
 end.
+

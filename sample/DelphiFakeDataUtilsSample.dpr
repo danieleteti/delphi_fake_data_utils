@@ -14,7 +14,12 @@ var
 begin
   for I := 1 to 100 do
   begin
-    Writeln(Format('%-20s from %s %s', [GetRndFullName, GetRndCountry, DateToStr(GetRndDate)]));
+    Writeln(Format('%-20s from %-15s %-10s - Salary: Eur %10.2f', [
+      GetRndFullName,
+      GetRndCountry,
+      DateToStr(GetRndDate),
+      GetRndInteger(10000,50000) / 10
+      ]));
   end;
 end;
 
