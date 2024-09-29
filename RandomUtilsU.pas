@@ -345,7 +345,7 @@ begin
   try
     lMT.FieldDefs.Clear;
     lMT.FieldDefs.Add('title', ftString, 100);
-    lMT.FieldDefs.Add('abstract', ftString, 200);
+    lMT.FieldDefs.Add('abstract', ftString, 400);
     lMT.FieldDefs.Add('word_count', ftInteger);
     lMT.FieldDefs.Add('comments', ftInteger);
     lMT.FieldDefs.Add('post_date', ftDate);
@@ -354,7 +354,7 @@ begin
     begin
       lMT.AppendRecord([
         GetRndPhrase(3, 8),
-        GetRndPhrase(20),
+        GetRndPhrase(30, 50),
         GetRndInteger(20, 5000),
         GetRndInteger(0,20),
         GetRndDate(2020, 4)
