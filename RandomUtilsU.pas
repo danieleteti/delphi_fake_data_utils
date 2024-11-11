@@ -31,7 +31,8 @@ interface
 uses
   Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
-  FireDAC.DApt.Intf, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  FireDAC.DApt.Intf, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  System.Generics.Collections;
 {$ENDIF}
 
 const
@@ -198,6 +199,24 @@ LOREM_IPSUM =
       'destruction', 'stale', 'basin', 'embarrass', 'rob', 'income', 'overjoyed', 'aback', 'spark', 'air', 'worthless', 'hospitable',
       'dynamic', 'push', 'nervous', 'dark', 'chin', 'shock', 'frame', 'dojo');
 
+
+type
+  TPerson = class
+  private
+    FID: Integer;
+    FName: String;
+    FEMail: String;
+    FSurname: String;
+    FDOB: TDate;
+  public
+    property ID: Integer read FID write FID;
+    property Name: String read FName write FName;
+    property Surname: String read FSurname write FSurname;
+    property DOB: TDate read FDOB write FDOB;
+    property EMail: String read FEMail write FEMail;
+    constructor Create(const ID: Integer; const Name, Surname: String; const DOB: TDate; const EMail: String);
+  end;
+
 function GetRndFirstName: String;
 function GetRndLastName: String;
 function GetRndFullName: String;
@@ -207,6 +226,7 @@ function GetRndDate(const InitialYear: Word = 1980; YearsSpan: Word = 40): TDate
 function GetRndInteger(const aFrom: Integer = 0; aTo: Integer = 1000): Integer;
 function GetRndWord: String;
 function GetRndPhrase(const aFrom: Integer = 0; aTo: Integer = 1000): String;
+function GetPeopleObjectList(const Count: Integer): TObjectList<TPerson>;
 
 {$IF Defined(GENERATE_DATASETS)}
 function GetPeople(const Count: Integer = 20): TDataSet;
@@ -370,6 +390,38 @@ end;
 
 
 {$ENDIF}
+
+
+{ TPerson }
+
+constructor TPerson.Create(const ID: Integer; const Name, Surname: String; const DOB: TDate; const EMail: String);
+begin
+  inherited Create;
+  FID := ID;
+  FName := Name;
+  FSurname := Surname;
+  FDOB := DOB;
+  FEMail := EMail;
+end;
+
+
+
+function GetPeopleObjectList(const Count: Integer): TObjectList<TPerson>;
+var
+  I: Integer;
+begin
+  Result := TObjectList<TPerson>.Create;
+  try
+    for I := 1 to Count do
+    begin
+      Result.Add(TPerson.Create(I, GetRndFirstName, GetRndLastName, GetRndDate, GetRndEMailAddress));
+    end;
+  except
+    Result.Free;
+    raise;
+  end;
+end;
+
 
 initialization
 
