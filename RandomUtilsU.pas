@@ -222,8 +222,12 @@ function GetRndLastName: String;
 function GetRndFullName: String;
 function GetRndCountry: String;
 function GetRndEMailAddress: String;
-function GetRndDate(const InitialYear: Word = 1980; YearsSpan: Word = 40): TDate;
+function GetRndFrom(const ArrayOfString: TArray<String>): String; overload;
+function GetRndFrom(const ArrayOfInteger: TArray<Integer>): Integer; overload;
+function GetRndDate(const InitialYear: Word = 1980; YearsSpan: Word = 40): TDate; overload;
+function GetRndDate(const InitialDate: TDate; const DaysSpan: Word = 365): TDate; overload;
 function GetRndInteger(const aFrom: Integer = 0; aTo: Integer = 1000): Integer;
+function GetRndFloat(const aFrom: Extended = 0; aTo: Extended = 1000): Extended;
 function GetRndWord: String;
 function GetRndPhrase(const aFrom: Integer = 0; aTo: Integer = 1000): String;
 function GetPeopleObjectList(const Count: Integer): TObjectList<TPerson>;
@@ -243,6 +247,11 @@ uses
 const
   OneDay = OneHour * 24;
 
+function GetRndDate(const InitialDate: TDate; const DaysSpan: Word = 365): TDate; overload;
+begin
+  Result := InitialDate + (OneDay * Random(DaysSpan));
+end;
+
 function GetRndDate(const InitialYear: Word; YearsSpan: Word): TDate;
 begin
   Result := EncodeDate(InitialYear + Random(YearsSpan),1,1) + (OneDay * Random(365));
@@ -253,6 +262,16 @@ begin
   Result := GetRndFirstName.Substring(0, RandomRange(1,3)) + '.' +
     GetRndLastName + '@' + GetRndCountry + GetRndInteger(1,3).ToString + '.com';
   Result := Result.Replace(' ', '_', [rfReplaceAll]);
+end;
+
+function GetRndFrom(const ArrayOfString: TArray<String>): String;
+begin
+  Result := ArrayOfString[Random(Length(ArrayOfString))];
+end;
+
+function GetRndFrom(const ArrayOfInteger: TArray<Integer>): Integer;
+begin
+  Result := ArrayOfInteger[Random(Length(ArrayOfInteger))];
 end;
 
 function GetRndCountry: String;
@@ -293,6 +312,16 @@ begin
   end;
   Result := Result.Trim;
   Result := UpCase(Result.Chars[0]) + Result.Substring(1) + '.';
+end;
+
+
+function GetRndFloat(const aFrom: Extended = 0; aTo: Extended = 1000): Extended;
+begin
+  if aFrom >= aTo then
+  begin
+    raise Exception.Create('FROM cannot be greater nor equal to TO');
+  end;
+  Result := afrom + (Random(Trunc(aTo * 10000)) / 10000);
 end;
 
 function GetRndInteger(const aFrom: Integer; aTo: Integer): Integer;
